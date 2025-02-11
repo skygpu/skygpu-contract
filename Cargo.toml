@@ -1,0 +1,24 @@
+[package]
+name = "skygpu"
+version = "0.1.0"
+authors = [""]
+edition = "2021"
+
+[dependencies]
+rust-chain = { git = "https://github.com/skygpu/rscdk.git", branch = "new_idx_types", default-features = false }
+# rust-chain = { path = "../../rscdk/crates/chain", default-features = false}
+
+[lib]
+name = "skygpu"
+path = "lib.rs"
+crate-type = [
+    "cdylib", 
+    #Used by abigen, DO NOT remove it
+    "rlib"
+]
+
+[features]
+default = ["std"]
+std = [
+    "rust-chain/std",
+]
