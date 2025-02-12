@@ -4,7 +4,7 @@
 #[rust_chain::contract]
 #[allow(dead_code)]
 mod skygpu {
-    use rust_chain::{Name, Asset, Symbol, Checksum256, TimePointSec};
+    use rust_chain::{Name, Asset, Symbol, Checksum256, TimePointSec, require_auth};
 
     #[chain(table="config", singleton)]
     pub struct Config {
@@ -96,6 +96,33 @@ mod skygpu {
         pub fn init_config(&mut self, token_contract: Name, token_symbol: Symbol) {
             self.config.token_account = token_contract;
             self.config.token_symbol = token_symbol;
+        }
+
+        #[chain(action = "clean")]
+        pub fn clean(&mut self) {
+            require_auth(self.receiver);
+            let queue = Request::new_table_with_scope(self.receiver, self.receiver);
+            let mut it = queue.lower_bound(0);
+            while !it.is_end() {
+                let scope = Name::from_u64(it.get_value().unwrap().id);
+                let status = Status::new_table_with_scope(self.receiver, scope);
+
+                let mut status_it = status.lower_bound(0);
+                while !status_it.is_end() {
+                    status.remove(&status_it);
+                    status_it = status.lower_bound(0);
+                }
+
+                queue.remove(&it);
+                it = queue.lower_bound(0);
+            }
+
+            let results = Result::new_table_with_scope(self.receiver, self.receiver);
+            let mut it = results.lower_bound(0);
+            while !it.is_end() {
+                results.remove(&it);
+                it = results.lower_bound(0);
+            }
         }
     }
 
