@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 rust-chain = { git = "https://github.com/skygpu/rscdk.git", branch = "new_idx_types", default-features = false }
-# rust-chain = { path = "../../rscdk/crates/chain", default-features = false}
+# rust-chain = { path = "../rscdk/crates/chain", default-features = false}
 
 [lib]
 name = "skygpu"

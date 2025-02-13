@@ -32,7 +32,8 @@ pkgs.mkShell {
   shellHook = ''
     set -e
     uv venv .venv
-    uv pip install rust-contracts-builder
+    uv pip install -U rust-contracts-builder
+    # uv pip install -U ipyeos
 
     sed -i "s/wasm32-wasi /wasm32-wasip1 /g" .venv/lib/python3.13/site-packages/rust_contracts_builder/__init__.py
     sed -i "s/wasm32-wasi\//wasm32-wasip1\//g" .venv/lib/python3.13/site-packages/rust_contracts_builder/__init__.py
